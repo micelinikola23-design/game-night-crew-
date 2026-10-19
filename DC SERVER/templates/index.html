@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game Night Crew - Server Portal</title>
+  <link rel="icon" type="image/jpeg" href="/templates/logo.png.jpeg">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      scroll-behavior: smooth;
+    }
+
+    /* HINTERGRUND: Dein Strand mit orange-rosarotem Sonnenuntergang */
+    body {
+      background-color: #1a0826;
+      background-image: linear-gradient(rgba(43, 15, 30, 0.65), rgba(20, 8, 30, 0.82)), url('/templates/background.jpg.jpeg');
+      background-size: cover;
+      background-position: center center;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+      color: #f1f5f9;
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* --- Navigation --- */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(25, 10, 30, 0.88);
+      backdrop-filter: blur(12px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.1rem 2.5rem;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(255, 145, 114, 0.3);
+    }
+
+    nav .logo {
+      font-weight: 800;
+      background: linear-gradient(135deg, #ff9172, #ff758c);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 1.4rem;
+      letter-spacing: 0.5px;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 1.8rem;
+      align-items: center;
+    }
+
+    nav ul li a {
+      color: #cbd5e1;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: color 0.2s ease;
+    }
+
+    nav ul li a:hover {
+      color: #ff9172;
+    }
+
+    .nav-btn {
+      background: linear-gradient(135deg, #ff512f, #ff758c);
+      color: #ffffff !important;
+      padding: 0.5rem 1.2rem;
+      border-radius: 20px;
+      box-shadow: 0 0 12px rgba(255, 81, 47, 0.4);
+    }
+
+    /* --- Hero Section --- */
+    .hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0 1.5rem;
+    }
+
+    .fly-in-title-container {
+      opacity: 0;
+      transform: translateY(-60px) scale(0.95);
+      animation: flyIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      margin-bottom: 1rem;
+    }
+
+    .title-line-1 {
+      font-size: clamp(2.8rem, 7vw, 5.2rem);
+      font-weight: 900;
+      letter-spacing: -1px;
+      background: linear-gradient(135deg, #ff512f, #f09819, #ffb199);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 25px rgba(240, 152, 25, 0.6));
+      line-height: 1.1;
+      text-transform: uppercase;
+    }
+
+    .title-line-2 {
+      font-size: clamp(2.8rem, 7vw, 5.2rem);
+      font-weight: 900;
+      letter-spacing: -1px;
+      background: linear-gradient(135deg, #ff416c, #ff758c, #ff9172);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 25px rgba(255, 117, 140, 0.6));
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+
+    .fly-in-subtitle {
+      font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+      color: #ffe4e6;
+      max-width: 650px;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: flyIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+      margin-bottom: 2.2rem;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      opacity: 0;
+      animation: fadeIn 1s ease 0.8s forwards;
+    }
+
+    .scroll-down-btn {
+      background: linear-gradient(135deg, #ff512f, #f09819);
+      color: #ffffff;
+      padding: 0.9rem 2.2rem;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1rem;
+      box-shadow: 0 4px 20px rgba(240, 152, 25, 0.45);
+    }
+
+    .discord-hero-btn {
+      background: rgba(88, 101, 242, 0.3);
+      border: 2px solid #5865F2;
+      color: #ffffff;
+      padding: 0.85rem 2rem;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    @keyframes flyIn {
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    /* --- Sections --- */
+    section {
+      padding: 6rem 2rem 4rem 2rem;
+      max-width: 1050px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-title::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 32px;
+      background: linear-gradient(180deg, #ff512f, #ff758c);
+      border-radius: 3px;
+    }
+
+    .section-desc {
+      color: #ffd6d0;
+      font-size: 1.05rem;
+      margin-bottom: 2rem;
+    }
+
+    /* --- Grids & Cards --- */
+    .features-grid, .team-grid, .games-grid, .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .feature-card, .team-card, .game-card, .card, .content-box, .feedback-form, .apply-box, .welcome-section-box {
+      background: rgba(30, 12, 35, 0.82);
+      border: 1px solid rgba(255, 145, 114, 0.28);
+      border-radius: 16px;
+      padding: 1.8rem;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .team-card { text-align: center; }
+    .team-card h3 { color: #ff9172; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+    .team-card ul { list-style: none; font-weight: 600; line-height: 1.8; }
+
+    .game-card { text-align: center; }
+    .game-card h3 { color: #ffffff; margin-bottom: 0.4rem; }
+    .game-card p { color: #fbcfe8; font-size: 0.9rem; }
+
+    .card h3 { font-size: 0.95rem; color: #ffd6d0; text-transform: uppercase; margin-bottom: 0.8rem; }
+    .card .value { font-size: 2.2rem; font-weight: 800; color: #ffffff; }
+
+    .progress-bar {
+      width: 100%;
+      height: 10px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 5px;
+      overflow: hidden;
+      margin-top: 0.8rem;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ff512f, #ff758c);
+      transition: width 0.4s ease;
+    }
+
+    /* --- Willkommenstext direkt vor "Was dich erwartet" --- */
+    .welcome-section-box {
+      background: linear-gradient(135deg, rgba(35, 12, 45, 0.9), rgba(55, 18, 50, 0.9));
+      border: 1px solid #ff9172;
+      margin-bottom: 2rem;
+    }
+
+    .welcome-section-box h3 {
+      font-size: 1.6rem;
+      color: #ffb199;
+      margin-bottom: 1rem;
+    }
+
+    .welcome-section-box p {
+      color: #f1f5f9;
+      margin-bottom: 1.2rem;
+      line-height: 1.7;
+    }
+
+    .welcome-features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .welcome-feature-item {
+      background: rgba(20, 8, 28, 0.7);
+      padding: 1rem;
+      border-radius: 12px;
+      border-left: 3px solid #ff9172;
+    }
+
+    .welcome-feature-item strong {
+      color: #ffb199;
+      display: block;
+      margin-bottom: 0.2rem;
+      font-size: 0.95rem;
+    }
+
+    .welcome-feature-item span {
+      color: #cbd5e1;
+      font-size: 0.88rem;
+    }
+
+    /* --- Rules Styling --- */
+    .rules-list {
+      list-style-type: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .rules-list li {
+      background: rgba(20, 8, 28, 0.7);
+      padding: 1rem 1.2rem;
+      border-radius: 12px;
+      border-left: 4px solid #ff9172;
+    }
+
+    .rules-list li strong {
+      color: #ffb199;
+      display: block;
+      margin-bottom: 0.3rem;
+      font-size: 1.05rem;
+    }
+
+    .rules-list li p {
+      color: #cbd5e1;
+      font-size: 0.95rem;
+    }
+
+    .rules-agreement {
+      margin-top: 1.8rem;
+      padding-top: 1.2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .agree-btn {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: white;
+      border: none;
+      padding: 0.8rem 1.8rem;
+      border-radius: 25px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .agree-btn:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 15px rgba(34, 197, 94, 0.5);
+    }
+
+    .agree-success {
+      display: none;
+      color: #4ade80;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    /* --- Apply / Team Bewerbung Box --- */
+    .apply-box {
+      margin-top: 2rem;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(35, 12, 45, 0.92), rgba(60, 18, 55, 0.92));
+      border: 1px solid #ff758c;
+    }
+
+    .apply-box h3 {
+      font-size: 1.4rem;
+      color: #ffb199;
+      margin-bottom: 0.6rem;
+    }
+
+    .apply-box p {
+      color: #cbd5e1;
+      margin-bottom: 1.2rem;
+      font-size: 0.95rem;
+    }
+
+    .apply-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #ff512f, #ff758c);
+      color: white;
+      padding: 0.85rem 2.2rem;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: bold;
+      box-shadow: 0 0 15px rgba(255, 117, 140, 0.4);
+      transition: transform 0.2s;
+    }
+
+    .apply-btn:hover {
+      transform: scale(1.05);
+    }
+
+    /* --- Feedback Form --- */
+    .feedback-form { display: flex; flex-direction: column; gap: 1.2rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+    .form-group label { font-weight: 600; color: #ffd6d0; font-size: 0.95rem; }
+    .form-group input, .form-group select, .form-group textarea {
+      background: rgba(20, 8, 28, 0.8);
+      border: 1px solid rgba(255, 145, 114, 0.3);
+      border-radius: 10px;
+      padding: 0.8rem 1rem;
+      color: #ffffff;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .submit-btn {
+      background: linear-gradient(135deg, #ff512f, #ff758c);
+      color: white;
+      border: none;
+      padding: 0.9rem 2rem;
+      border-radius: 25px;
+      font-weight: 700;
+      cursor: pointer;
+      align-self: flex-start;
+    }
+
+    .feedback-success {
+      display: none;
+      background: rgba(74, 222, 128, 0.15);
+      border: 1px solid #4ade80;
+      color: #4ade80;
+      padding: 1rem;
+      border-radius: 10px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2.5rem;
+      color: #ffd6d0;
+      border-top: 1px solid rgba(255, 145, 114, 0.2);
+      margin-top: 4rem;
+    }
+
+    @media (max-width: 768px) { nav ul { display: none; } }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav>
+    <div class="logo">Game Night Crew</div>
+    <ul>
+      <li><a href="#home">Home</a></li>
+      <li><a href="#welcome-info">Über uns</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#team">Team</a></li>
+      <li><a href="#games">Games</a></li>
+      <li><a href="#stats">Status</a></li>
+      <li><a href="#rules">Regeln</a></li>
+      <li><a href="#feedback">Vorschläge</a></li>
+      <li><a href="https://discord.gg/MZDvgFwuSq" target="_blank" class="nav-btn">Discord Beitreten</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero Startseite -->
+  <div id="home" class="hero">
+    <div class="fly-in-title-container">
+      <div class="title-line-1">Game Night</div>
+      <div class="title-line-2">Crew</div>
+    </div>
+    <p class="fly-in-subtitle">Deine Community zum Zocken, Chillen und Freunde finden. Komm rein und werd Teil der Crew!</p>
+    <div class="hero-buttons">
+      <a href="https://discord.gg/MZDvgFwuSq" target="_blank" class="discord-hero-btn">💬 Server Beitreten</a>
+      <a href="#welcome-info" class="scroll-down-btn">Entdecken ↓</a>
+    </div>
+  </div>
+
+  <!-- Willkommenstext direkt vor "Was dich erwartet" -->
+  <section id="welcome-info">
+    <div class="welcome-section-box">
+      <h3>Willkommen bei der Game Night Crew! ✨</h3>
+      <p>
+        Hey Crews! Suchst du nach einer aktiven Community, coolen Gaming-Runden und einem Ort, an dem du einfach du selbst sein kannst? Dann komm zur <strong>Game Night Crew</strong> – der perfekten Mischung aus einem lebendigen Community- und Gaming-Server! Bei uns steht das gemeinsame Erlebnis und ein entspanntes Miteinander an erster Stelle.
+      </p>
+      
+      <div class="welcome-features-grid">
+        <div class="welcome-feature-item">
+          <strong>🔒 Sicherheit & Verifizierung</strong>
+          <span>Kurz verifizieren und schon hast du vollen Zugriff auf alle Kanäle!</span>
+        </div>
+        <div class="welcome-feature-item">
+          <strong>💬 Support- & Therapie-Tickets</strong>
+          <span>Ein offenes Ohr gefällig? Erstelle ein privates Ticket und rede mit unseren vertrauensvollen Teammitgliedern (Therapeuten), die dir zuhören und Tipps geben.</span>
+        </div>
+        <div class="welcome-feature-item">
+          <strong>🎙️ Aktive Sprachkanäle</strong>
+          <span>Unsere Voice-Channels sind super lebendig – hier findest du fast immer nette Leute zum Quatschen oder Zocken.</span>
+        </div>
+        <div class="welcome-feature-item">
+          <strong>🎨 Eigene Server-Farbe</strong>
+          <span>Verpasse deinem Namen sofort nach dem Beitreten deine individuelle Lieblingsfarbe.</span>
+        </div>
+        <div class="welcome-feature-item">
+          <strong>👥 Self-Roles & Pings</strong>
+          <span>Wähle ganz entspannt deine Rollen und entscheide, ob du morgens und abends Grüße bekommen möchtest.</span>
+        </div>
+      </div>
+      
+      <div style="text-align: center; margin-top: 2rem;">
+        <a href="https://discord.gg/MZDvgFwuSq" target="_blank" class="discord-hero-btn">💬 Jetzt dem Server beitreten</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1. Highlights & Features -->
+  <section id="features">
+    <h2 class="section-title">Was dich erwartet</h2>
+    <p class="section-desc">Das macht die Game Night Crew zu deiner perfekten Discord-Community:</p>
+    
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🎙️</div>
+        <h3>Gemütliche Voice-Talks</h3>
+        <p>Tritt unseren festen Sprachkanälen bei, finde Mitspieler und quatsche über Gott und die Welt.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎟️</div>
+        <h3>Schneller Support</h3>
+        <p>Unser Ticket-System hilft dir bei Fragen, Anliegen oder Hilfe sofort weiter.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⭐</div>
+        <h3>Level & Belohnungen</h3>
+        <p>Sammle XP durch Chatten & Zocken und schalte exklusive Rollen frei!</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🤝</div>
+        <h3>Tolles Team & Therapie</h3>
+        <p>Ein hilfsbereites Mod-Team und direkte Ansprechpartner für entspanntes Miteinander.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Team Sektion -->
+  <section id="team">
+    <h2 class="section-title">Unser Server-Team</h2>
+    <p class="section-desc">Das Team hinter der Game Night Crew:</p>
+    <div class="team-grid">
+      <div class="team-card">
+        <h3>★ HEAD TEAM ★</h3>
+        <ul>
+          <li>𝒩𝒾𝓀ℴ | Head</li>
+          <li>·ℛ𝒶𝓎 ℛ𝒶𝓏⋆ | Head</li>
+        </ul>
+      </div>
+      <div class="team-card">
+        <h3>★ ADMIN TEAM ★</h3>
+        <ul>
+          <li>Vicky | Admin</li>
+          <li>lilth</li>
+        </ul>
+      </div>
+      <div class="team-card">
+        <h3>★ MOD TEAM ★</h3>
+        <ul>
+          <li>Dr.Schwarzer_Lord/Mod</li>
+        </ul>
+      </div>
+      <div class="team-card">
+        <h3>★ HELPER TEAM ★</h3>
+        <ul>
+          <li>Tom | Helper</li>
+          <li>Amelie | Helper</li>
+        </ul>
+      </div>
+      <div class="team-card">
+        <h3>★ CREW-THERAPEUT ★</h3>
+        <ul>
+          <li>Dr.Schwarzer_Lord/Mod</li>
+          <li>lilth</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Games Sektion -->
+  <section id="games">
+    <h2 class="section-title">Was wir spielen</h2>
+    <p class="section-desc">Diese Games zocken wir am liebsten gemeinsam auf dem Server:</p>
+    
+    <div class="games-grid">
+      <div class="game-card">
+        <h3>Among Us</h3>
+        <p>Impostor suchen & Crewmate retten</p>
+      </div>
+      <div class="game-card">
+        <h3>Phasmophobia</h3>
+        <p>Gruselige Geisterjagd im Team</p>
+      </div>
+      <div class="game-card">
+        <h3>Roblox</h3>
+        <p>Spaßige Minigames & Welten</p>
+      </div>
+      <div class="game-card">
+        <h3>Apex Legends</h3>
+        <p>Actiongeladene Squad-Matches</p>
+      </div>
+      <div class="game-card">
+        <h3>Minecraft</h3>
+        <p>Bauen, Mods & gemeinsame Abenteuer</p>
+      </div>
+      <div class="game-card">
+        <h3>Und vieles mehr!</h3>
+        <p>Entdecke neue Games mit der Community</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Server Live-Status -->
+  <section id="stats">
+    <h2 class="section-title">Server Live-Status</h2>
+    <p class="section-desc">Echtzeit-Daten vom Host-System und Community-Links.</p>
+    
+    <div class="grid">
+      <div class="card">
+        <h3>Community Status</h3>
+        <div class="value" style="color: #ffb199; font-size: 1.6rem;">138 Mitglieder</div>
+        <p style="font-size: 0.85rem; color: #ffd6d0; margin-top: 0.3rem;">Aktiv & Bereit zum Zocken</p>
+      </div>
+
+      <div class="card">
+        <h3>Discord Invite</h3>
+        <div class="value" style="font-size: 1.2rem; padding-top: 10px;">
+          <a href="https://discord.gg/MZDvgFwuSq" target="_blank" style="color: #ff9172; text-decoration: none;">MZDvgFwuSq ↗</a>
+        </div>
+        <p style="font-size: 0.85rem; color: #ffd6d0; margin-top: 0.3rem;">Direktlink</p>
+      </div>
+
+      <div class="card">
+        <h3>CPU Auslastung</h3>
+        <div class="value" id="cpu-val">0%</div>
+        <div class="progress-bar"><div class="progress-fill" id="cpu-bar"></div></div>
+      </div>
+
+      <div class="card">
+        <h3>Arbeitsspeicher (RAM)</h3>
+        <div class="value" id="ram-val">0%</div>
+        <div class="progress-bar"><div class="progress-fill" id="ram-bar"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Regeln Sektion -->
+  <section id="rules">
+    <h2 class="section-title">Server-Regeln</h2>
+    <div class="content-box">
+      <ul class="rules-list">
+        <li>
+          <strong>01. Respektvoller Umgang</strong>
+          <p>Behandle alle Mitglieder freundlich und mit Respekt. Beleidigungen, rassistische Äußerungen, Sexismus oder Mobbing werden auf unserem Server absolut nicht toleriert und führen sofort zu Konsequenzen.</p>
+        </li>
+        <li>
+          <strong>02. Kein Drama & Streit</strong>
+          <p>Hass, ständiges Provozieren und unnötiges Drama im Chat oder in den Voice-Channels zerstören die Community-Stimmung. Halte den Server friedlich.</p>
+        </li>
+        <li>
+          <strong>03. Kein Spam & Massen-Pings</strong>
+          <p>Das wiederholte Posten von gleichen Nachrichten, Emojis oder das grundlose Markieren (Pingen) von anderen Mitgliedern oder Teammitgliedern ist strengstens verboten.</p>
+        </li>
+        <li>
+          <strong>04. Keine NSFW-Inhalte</strong>
+          <p>Unser Server ist jugendfreundlich. Bilder, Videos oder Links mit gewalttätigen, pornografischen oder anderweitig unangemessen Inhalten haben hier keinen Platz.</p>
+        </li>
+        <li>
+          <strong>05. Werbung nur nach Absprache</strong>
+          <p>Fremdwerbung für andere Discord-Server, Social-Media-Kanäle oder Streams ist ohne vorherige Erlaubnis der Server-Leitung untersagt.</p>
+        </li>
+        <li>
+          <strong>06. Anweisungen des Teams befolgen</strong>
+          <p>Das Head-, Admin- und Mod-Team sorgt für Ordnung. Den Anweisungen der Moderatoren und Admins ist im Streitfall unbedingt Folge zu leisten.</p>
+        </li>
+      </ul>
+
+      <div class="rules-agreement">
+        <button class="agree-btn" onclick="acceptRules()">✅ Ich bin mit diesen Regeln einverstanden</button>
+        <span class="agree-success" id="agree-msg">Vielen Dank! Du hast die Regeln akzeptiert. Willkommen in der Crew! ✨</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Feedback & Vorschläge + Teambewerbung -->
+  <section id="feedback">
+    <h2 class="section-title">Bewertung & Vorschläge</h2>
+    <p class="section-desc">Hast du Ideen für den Server oder möchtest Feedback dalassen? Lass es uns wissen!</p>
+
+    <div class="feedback-form">
+      <div class="feedback-success" id="feedback-success-msg">
+        Vielen Dank! Dein Vorschlag wurde erfolgreich eingereicht. ✨
+      </div>
+
+      <div class="form-group">
+        <label for="fb-name">Dein Discord-Name (Optional):</label>
+        <input type="text" id="fb-name" placeholder="z. B. Niko">
+      </div>
+
+      <div class="form-group">
+        <label for="fb-rating">Wie gefällt dir der Server & die Webseite?</label>
+        <select id="fb-rating">
+          <option value="5">⭐⭐⭐⭐⭐ (Super gut!)</option>
+          <option value="4">⭐⭐⭐⭐ (Sehr gut)</option>
+          <option value="3">⭐⭐⭐ (Ganz gut)</option>
+          <option value="2">⭐⭐ (Geht so)</option>
+          <option value="1">⭐ (Verbesserungswürdig)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="fb-text">Dein Vorschlag oder Feedback:</label>
+        <textarea id="fb-text" rows="4" placeholder="Schreib hier deine Ideen für neue Channels, Events oder Rollen rein..." required></textarea>
+      </div>
+
+      <button type="button" class="submit-btn" onclick="sendFeedback()">Abschicken ✨</button>
+    </div>
+
+    <!-- Teambewerbung Box -->
+    <div class="apply-box">
+      <h3>🚀 Willst du Teil des Teams werden?</h3>
+      <p>Du möchtest aktiv bei der Gestaltung des Servers helfen, Events planen oder User unterstützen? Bewirb dich jetzt direkt über unser Formular!</p>
+      <a href="https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAAN__kmAzQtUQllZREo2R0RZQUc4TlcxWkdHRkZUNDZJUy4u" target="_blank" class="apply-btn">Jetzt als Teammitglied bewerben ↗</a>
+    </div>
+  </section>
+
+  <!-- 7. Story & Vibe -->
+  <section id="story">
+    <h2 class="section-title">Unsere Story</h2>
+    <div class="content-box">
+      <p>Alles begann am <strong>15. Mai</strong>. Wir haben die <strong>Game Night Crew</strong> ins Leben gerufen, um einen gemütlichen Ort zum Zocken, Reden und Chillen zu erschaffen. Egal ob Casual Gamer oder Pro – bei uns findet jeder seinen Squad!</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2026 Game Night Crew. Alle Rechte vorbehalten.</p>
+  </footer>
+
+  <script>
+    function acceptRules() {
+      const msg = document.getElementById('agree-msg');
+      msg.style.display = 'block';
+    }
+
+    function getBarColor(percent) {
+      if (percent > 85) return '#ef4444';
+      if (percent > 65) return '#f59e0b';
+      return '#ff758c';
+    }
+
+    async function fetchStats() {
+      try {
+        const response = await fetch('/api/stats');
+        const data = await response.json();
+
+        const cpuEl = document.getElementById('cpu-val');
+        if (cpuEl) cpuEl.innerText = data.cpu_percent + '%';
+        const cpuBar = document.getElementById('cpu-bar');
+        if (cpuBar) {
+          cpuBar.style.width = data.cpu_percent + '%';
+          cpuBar.style.backgroundColor = getBarColor(data.cpu_percent);
+        }
+
+        const ramEl = document.getElementById('ram-val');
+        if (ramEl) ramEl.innerText = data.ram_percent + '%';
+        const ramBar = document.getElementById('ram-bar');
+        if (ramBar) {
+          ramBar.style.width = data.ram_percent + '%';
+          ramBar.style.backgroundColor = getBarColor(data.ram_percent);
+        }
+
+      } catch (err) {
+        console.error('Fehler beim Laden der Live-Daten:', err);
+      }
+    }
+
+    async function sendFeedback() {
+      const name = document.getElementById('fb-name').value || 'Anonym';
+      const rating = document.getElementById('fb-rating').value;
+      const text = document.getElementById('fb-text').value;
+
+      if (!text.trim()) {
+        alert('Bitte gib zuerst ein Feedback ein!');
+        return;
+      }
+
+      try {
+        await fetch('/api/feedback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, rating, text })
+        });
+
+        document.getElementById('feedback-success-msg').style.display = 'block';
+        document.getElementById('fb-text').value = '';
+        document.getElementById('fb-name').value = '';
+      } catch (err) {
+        console.error('Fehler:', err);
+      }
+    }
+
+    setInterval(fetchStats, 2000);
+    fetchStats();
+  </script>
+
+</body>
+</html>
